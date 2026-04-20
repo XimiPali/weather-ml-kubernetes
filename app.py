@@ -27,19 +27,16 @@ def fetch_weather_data():
 def train():
     global model, next_day_index
 
-    # Step 1: Get temperature data from the API
     temperatures = fetch_weather_data()
 
-    # Step 2: Build X (day index) and Y (temperature) arrays
-    # X = [[0], [1], [2], ...] — sklearn expects a 2D array
+    # Building X (day index) and Y (temperature) arrays
     X = np.array(range(len(temperatures))).reshape(-1, 1)
     Y = np.array(temperatures)
 
-    # Step 3: Train a simple Linear Regression model
     model = LinearRegression()
     model.fit(X, Y)
 
-    # Step 4: Remember what the "next" day index will be for prediction
+    # Remembering what the "next" day index will be for prediction
     next_day_index = len(temperatures)
 
     return jsonify({
@@ -53,11 +50,10 @@ def train():
 def predict():
     global model, next_day_index
 
-    # Make sure the model has been trained first
     if model is None:
         return jsonify({"error": "Model not trained yet. Call /train first."}), 400
 
-    # Step 5: Predict temperature for the next day
+    # Predicting temperature for the next day
     prediction = model.predict([[next_day_index]])
     predicted_temp = round(float(prediction[0]), 2)
 
@@ -69,6 +65,6 @@ def predict():
 
 if __name__ == "__main__":
     print("Starting Flask app...")
-    print("  /train   → train the model on recent weather data")
-    print("  /predict → get the predicted next-day temperature")
+    print("/train   → train the model on recent weather data")
+    print("/predict → get the predicted next-day temperature")
     app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
