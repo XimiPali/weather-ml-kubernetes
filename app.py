@@ -15,7 +15,7 @@ def fetch_weather_data():
         "https://archive-api.open-meteo.com/v1/archive"
         "?latitude=40.71&longitude=-74.00"
         "&start_date=2026-04-01&end_date=2026-04-20"
-        "&daily=temperature_2m_max&timezone=auto"
+        "&daily=temperature_2m_max&timezone=auto&temperature_unit=fahrenheit"
     )
     response = requests.get(url)
     data = response.json()
@@ -59,7 +59,7 @@ def predict():
 
     return jsonify({
         "next_day_index": next_day_index,
-        "predicted_temperature_celsius": predicted_temp
+        "predicted_temperature_fahrenheit": predicted_temp
     })
 
 

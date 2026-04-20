@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: wx-ml                  # Name of the Deployment
 spec:
-  replicas: 1                  # Start with 1 pod
+  replicas: 3                  
   selector:
     matchLabels:
       app: wx-ml               # Must match the pod label below
