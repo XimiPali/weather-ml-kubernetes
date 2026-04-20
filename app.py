@@ -14,7 +14,7 @@ def fetch_weather_data():
     url = (
         "https://archive-api.open-meteo.com/v1/archive"
         "?latitude=40.71&longitude=-74.00"
-        "&start_date=2026-04-01&end_date=2026-04-22"
+        "&start_date=2026-04-01&end_date=2026-04-20"
         "&daily=temperature_2m_max&timezone=auto"
     )
     response = requests.get(url)
