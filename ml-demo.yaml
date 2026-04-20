@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wx-ml                  # Name of the Deployment
+spec:
+  replicas: 1                  # Start with 1 pod
+  selector:
+    matchLabels:
+      app: wx-ml               # Must match the pod label below
+  template:
+    metadata:
+      labels:
+        app: wx-ml             # Label applied to each pod
+    spec:
+      containers:
+        - name: wx-ml          # Container name
+          image: wx-ml:1.0     # Local image built with docker build
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000   # Port the Flask app listens on
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wx-ml-svc              # Name of the Service
+spec:
+  type: NodePort               # Exposes the app on a port on your machine
+  selector:
+    app: wx-ml                 # Routes traffic to pods with this label
+  ports:
+    - port: 5000               # Port on the Service
+      targetPort: 5000         # Port on the container
