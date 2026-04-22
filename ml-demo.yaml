@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: wx-ml                  # Name of the Deployment
 spec:
-  replicas: 3                  
+  replicas: 5                  
   selector:
     matchLabels:
       app: wx-ml               # Must match the pod label below
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: wx-ml          # Container name
-          image: wx-ml:1.0     # Local image built with docker build
+          image: wx-ml:2.0     # Local image built with docker build
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000   # Port the Flask app listens on
