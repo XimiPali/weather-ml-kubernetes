@@ -1,6 +1,6 @@
 import requests
 import numpy as np
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from sklearn.linear_model import LinearRegression
 
 app = Flask(__name__)
@@ -14,13 +14,23 @@ def fetch_weather_data():
     url = (
         "https://archive-api.open-meteo.com/v1/archive"
         "?latitude=40.71&longitude=-74.00"
-        "&start_date=2026-04-01&end_date=2026-04-22"
+        "&start_date=2026-05-01&end_date=2026-05-13"
         "&daily=temperature_2m_max&timezone=auto&temperature_unit=fahrenheit"
     )
     response = requests.get(url)
     data = response.json()
     temperatures = data["daily"]["temperature_2m_max"]
     return temperatures
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
+
 
 @app.route("/train")
 def train():
@@ -35,7 +45,7 @@ def train():
     model.fit(X, Y)
 
     next_day_index = len(temperatures)
-    predicted_date = "2026-04-23"
+    predicted_date = "2026-05-14"
 
     return jsonify({
         "status": "model trained",

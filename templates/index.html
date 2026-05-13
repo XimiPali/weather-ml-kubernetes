@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather ML Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: #f8fafc;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      margin-bottom: 2.5rem;
+    }
+
+    .cards {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.8rem;
+      width: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    button:hover { opacity: 0.85; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-train  { background: #3b82f6; color: #fff; }
+    .btn-predict { background: #10b981; color: #fff; }
+    .btn-health { background: #8b5cf6; color: #fff; }
+
+    .result-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.4rem 1.8rem;
+      width: 100%;
+      max-width: 560px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .result-box h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569;
+      margin-bottom: 0.3rem;
+    }
+
+    pre {
+      font-family: 'Cascadia Code', 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: #7dd3fc;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #334155;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .status-dot.ok  { background: #10b981; }
+    .status-dot.err { background: #ef4444; }
+  </style>
+</head>
+<body>
+
+  <h1>Weather ML Demo</h1>
+  <p class="subtitle">NYC temperature prediction — Linear Regression + Flask + Kubernetes</p>
+
+  <div class="cards">
+
+    <div class="card">
+      <h2>Train</h2>
+      <p>Fetch weather data and train the Linear Regression model.</p>
+      <button class="btn-train" onclick="callEndpoint('/train', 'Train')">Train Model</button>
+    </div>
+
+    <div class="card">
+      <h2>Predict</h2>
+      <p>Predict the next day's temperature. Train first!</p>
+      <button class="btn-predict" onclick="callEndpoint('/predict', 'Predict')">Get Prediction</button>
+    </div>
+
+    <div class="card">
+      <h2>Health</h2>
+      <p>Check that the API is running and healthy.</p>
+      <button class="btn-health" onclick="callEndpoint('/health', 'Health')">Check Health</button>
+    </div>
+
+  </div>
+
+  <div class="result-box">
+    <h3><span class="status-dot" id="dot"></span>Response</h3>
+    <pre id="output">Click a button to see the result.</pre>
+  </div>
+
+  <script>
+    async function callEndpoint(url, label) {
+      const output = document.getElementById('output');
+      const dot    = document.getElementById('dot');
+
+      output.textContent = `Calling ${url} ...`;
+      dot.className = 'status-dot';
+
+      try {
+        const res  = await fetch(url);
+        const data = await res.json();
+        dot.className = res.ok ? 'status-dot ok' : 'status-dot err';
+        output.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        dot.className = 'status-dot err';
+        output.textContent = 'Error: ' + err.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
